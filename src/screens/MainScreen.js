@@ -44,7 +44,8 @@ export default class MainScreen extends React.Component {
         super(props);
         mContext = this;
         this.state = {
-            list: []
+            list: [],
+            refresh: true
         }
     }
 
@@ -53,32 +54,58 @@ export default class MainScreen extends React.Component {
             <View>
                 <FlatList style={items.contain}
                           data={this.state.list}
-                          renderItem={({item}) => <View style={{borderTopColor: 'green'}}>
-                              <Text style={items.name}>{item.displayname}</Text>
-                              <Text style={items.author}>{item.author}</Text>
-                              <View style={items.line}/>
-                          </View>}
+                          renderItem={({item}) =>
+                              <TouchableOpacity
+                                  onPress={() => this.props.navigation.navigate('MyQuestion', {
+                                      name: item.displayname,
+                                      id: item.id
+                                  })}>
+                                  <View style={{borderTopColor: 'green'}}>
+                                      <Text style={items.name}>{item.displayname}</Text>
+                                      <Text style={items.author}>{item.author}</Text>
+                                      <View style={items.line}/>
+                                  </View>
+                              </TouchableOpacity>
+                          }
                           keyExtractor={item => item.id}
+                          refreshing={this.state.refresh}
+                          onRefresh={() => {
+                              this.callAPI();
+                          }}
+                          onEndReachedThreshold={-0.5}
+                          onEndReached={() => {
+
+                          }}
                 />
             </View>
         );
     }
 
     componentDidMount() {
+        this.callAPI();
+
+    }
+
+    callAPI() {
+        mContext.setState({
+            refresh: true
+        });
         instance.defaults.headers.common['X-Math-Api-Key'] = 'manh123@abc';
         instance.get('/content/get-test.php')
             .then(function (response) {
                 console.log("responseJson: " + JSON.stringify(response));
                 mContext.setState({
-                    list: response.data.data
+                    list: response.data.data,
+                    refresh: false
                 })
 
             })
             .catch(function (error) {
                 console.log(error);
+                mContext.setState({
+                    refresh: false
+                })
             });
-
-
     }
 }
 const styles = StyleSheet.create({
