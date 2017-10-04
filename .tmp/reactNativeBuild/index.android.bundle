@@ -61156,26 +61156,53 @@ var QuestionScreen = function (_React$Component) {
             header: "<head><script type='text/javascript' async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script></head>",
             pages: []
         };
+        for (var i = 0; i < 3; i++) {
+            _this.setState({
+                pages: _this.state.pages.push(_react2.default.createElement(
+                    _reactNative.View,
+                    { key: i, style: { flex: 1 }, collapsable: false, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 49
+                        }
+                    },
+                    _react2.default.createElement(
+                        _reactNative.Text,
+                        {
+                            __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 50
+                            }
+                        },
+                        "aaa"
+                    )
+                ))
+
+            });
+        }
         return _this;
     }
 
     babelHelpers.createClass(QuestionScreen, [{
         key: "render",
         value: function render() {
+            var _this2 = this;
 
             return _react2.default.createElement(
                 _reactNative.View,
                 { style: { flex: 1 }, __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 51
+                        lineNumber: 63
                     }
                 },
                 _react2.default.createElement(
                     _reactNativeViewPager2.default,
-                    { ref: "viewPager",
-                        initialPage: 0, style: { flex: 1 }, __source: {
+                    {
+                        initialPage: 0, style: { flex: 1 },
+                        ref: function ref(viewPager) {
+                            _this2.viewPager = viewPager;
+                        }, __source: {
                             fileName: _jsxFileName,
-                            lineNumber: 53
+                            lineNumber: 65
                         }
                     },
                     this.state.pages
@@ -61197,24 +61224,30 @@ var QuestionScreen = function (_React$Component) {
                 var header = "<head><script type='text/javascript' async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script></head>";
                 for (var i = 0; i < response.data.data.length; i++) {
                     var content = (0, _html2.default)(response.data.data[i].question, response.data.data[i].image, response.data.data[i].answerA, response.data.data[i].answerB, response.data.data[i].answerC, response.data.data[i].answerD);
-
-                    mContext.setState({
-                        pages: mContext.state.pages.push(_react2.default.createElement(
-                            _reactNative.View,
-                            { key: i, style: { flex: 1 }, collapsable: false, __source: {
+                    mangStemp.push(_react2.default.createElement(
+                        _reactNative.View,
+                        { key: i + 3, style: { flex: 1 }, collapsable: false, __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 98
+                            }
+                        },
+                        _react2.default.createElement(
+                            _reactNative.Text,
+                            {
+                                __source: {
                                     fileName: _jsxFileName,
-                                    lineNumber: 87
+                                    lineNumber: 99
                                 }
                             },
-                            _react2.default.createElement(_reactNative.WebView, { source: { html: header + content }, style: { flex: 1 }, __source: {
-                                    fileName: _jsxFileName,
-                                    lineNumber: 88
-                                }
-                            })
-                        ))
-
-                    });
+                            "bbb"
+                        )
+                    ));
                 }
+
+                mContext.setState({
+                    pages: mContext.state.pages.concat(mangStemp)
+
+                });
             }).catch(function (error) {
                 console.log(error);
             });

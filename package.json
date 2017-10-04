@@ -12,7 +12,8 @@
     "react-mathjax": "^0.1.1",
     "react-native": "0.48.2",
     "react-native-htmlview": "^0.12.0",
-    "react-native-swiper": "^1.5.12",
+    "react-native-swiper": "^1.5.13",
+    "react-native-tabbed-view-pager-android": "^1.0.3",
     "react-native-view-pager": "^0.2.2",
     "react-native-viewpager": "^0.2.13",
     "react-navigation": "^1.0.0-beta.11"

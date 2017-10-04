@@ -1,9 +1,8 @@
 import React from "react";
-import {Image, TouchableOpacity, View, WebView, Text, StyleSheet} from "react-native";
+import { Image, TouchableOpacity, View, WebView, Text, StyleSheet } from "react-native";
 import getMath from '../../assets/html';
 import axios from 'axios';
-import ViewPager from 'react-native-view-pager';
-
+import Swiper from 'react-native-swiper';
 const instance = axios.create({
     baseURL: 'http://mathpt.webstarterz.com/api',
     headers: {
@@ -14,12 +13,12 @@ const MenuBack = (props) => (
     <TouchableOpacity onPress={() => {
         goBack();
     }}>
-        <Image source={require('../../imgs/ic_back.png')} style={{width: 24, height: 22, marginLeft: 16}}/>
+        <Image source={require('../../imgs/ic_back.png')} style={{ width: 24, height: 22, marginLeft: 16 }} />
     </TouchableOpacity>
 );
 let mContext;
 export default class QuestionScreen extends React.Component {
-    static navigationOptions = ({navigation}) => ({
+    static navigationOptions = ({ navigation }) => ({
         title: `${navigation.state.params.name}`,
         headerStyle: {
             backgroundColor: '#2196F3'
@@ -31,7 +30,7 @@ export default class QuestionScreen extends React.Component {
             console.log("on Back");
             navigation.goBack(null);
         }}>
-            <Image source={require('../../imgs/ic_back.png')} style={{width: 24, height: 24, marginLeft: 16}}/>
+            <Image source={require('../../imgs/ic_back.png')} style={{ width: 24, height: 24, marginLeft: 16 }} />
         </TouchableOpacity>
     });
 
@@ -45,15 +44,26 @@ export default class QuestionScreen extends React.Component {
         };
     }
 
+    componentWillUnmount() {
+
+    }
+
     render() {
 
         return (
-            <View style={{flex: 1}}>
-
-                <ViewPager ref='viewPager'
-                           initialPage={0} style={{flex: 1}}>
-                    {this.state.pages}
-                </ViewPager>
+            <View style={{ flex: 1 }}>
+                <Swiper style={styles.wrapper} showsButtons={true}
+                    loop={false}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}>
+                    {this.state.pages.map((item, key) => {
+                        return (
+                            <View key={item.id} style={{ flex: 1 }}>
+                                <WebView source={{ html: this.state.header + item.content }} style={{ flex: 1 }} />
+                            </View>
+                        )
+                    })}
+                </Swiper>
             </View>
         );
     }
@@ -72,39 +82,36 @@ export default class QuestionScreen extends React.Component {
                 //     // htmlContent: content
                 //     contentPager: response.data.data
                 // })
+                //<WebView source={{html: header + content}} style={{flex: 1}}/>
                 let mangStemp = [];
                 let header = `<head><script type=\'text/javascript\' async src=\'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\'></script></head>`;
                 for (var i = 0; i < response.data.data.length; i++) {
-                    const content = getMath(response.data.data[i].question, response.data.data[i].image,
-                        response.data.data[i].answerA, response.data.data[i].answerB, response.data.data[i].answerC, response.data.data[i].answerD);
-                    // mangStemp.push(
-                    //     <View key={i} style={pageStyle} collapsable={false}>
-                    //         <WebView source={{html: header + content}} style={{flex: 1}}/>
-                    //     </View>
-                    // )
-                    mContext.setState({
-                        pages: mContext.state.pages.push(
-                            <View key={i} style={{flex: 1}} collapsable={false}>
-                                <WebView source={{html: header + content}} style={{flex: 1}}/>
-                            </View>)
-
-                    })
+                    const contentHtml = getMath("<b>Câu "+(i+1)+":</b> "+response.data.data[i].question, response.data.data[i].image,
+                        response.data.data[i].answerA, response.data.data[i].answerB, response.data.data[i].answerC,
+                        response.data.data[i].answerD);
+                    const obj = {
+                        id: response.data.data[i].id,
+                        content: contentHtml
+                    }
+                    mangStemp.push(obj);
 
                 }
                 // console.log("mangStemp: " + JSON.stringify(mangStemp.length));
-                // mContext.setState({
-                //     pages: mangStemp
-                //
-                // })
+                mContext.setState({
+                    pages: mContext.state.pages.concat(mangStemp)
+
+                });
+
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
+
 }
 
 const styles = StyleSheet.create({
-    wrapper: {},
+    wrapper: { flex: 1, },
     slide1: {
         flex: 1,
         justifyContent: 'center',
