@@ -3,12 +3,17 @@ import {
     StyleSheet, Image, View, Button, TouchableOpacity, FlatList, Text
 } from 'react-native';
 import axios from 'axios';
+const MathJax = require('react-mathjax');
+
+const tex = `f(x) = \\int_{-\\infty}^\\infty
+\\hat f(\\xi)\\,e^{2 \\pi i \\xi x}
+\\,d\\xi`;
 
 const MenuButton = (props) => (
     <TouchableOpacity onPress={() => {
         props.navigation.navigate('DrawerOpen')
     }}>
-        <Image source={require('../../imgs/icon_menu.png')} style={{width: 24, height: 22, marginLeft: 16}}/>
+        <Image source={require('../../imgs/icon_menu.png')} style={{ width: 24, height: 22, marginLeft: 16 }} />
     </TouchableOpacity>
 );
 
@@ -21,9 +26,9 @@ const instance = axios.create({
 let mContext;
 export default class MainScreen extends React.Component {
 
-    static navigationOptions = ({navigation}) => ({
+    static navigationOptions = ({ navigation }) => ({
         title: 'Home',
-        headerLeft: <MenuButton navigation={navigation}/>,
+        headerLeft: <MenuButton navigation={navigation} />,
         headerStyle: {
             backgroundColor: '#2196F3'
         },
@@ -32,7 +37,7 @@ export default class MainScreen extends React.Component {
         },
         drawerLabel: 'Home',
         headerBackTitle: null,
-        drawerIcon: ({tintColor}) => (
+        drawerIcon: ({ tintColor }) => (
             <Image
                 source={require('../../imgs/ic_category.png')}
                 style={[styles.icon]}
@@ -52,30 +57,38 @@ export default class MainScreen extends React.Component {
     render() {
         return (
             <View>
-                <FlatList style={items.contain}
-                          data={this.state.list}
-                          renderItem={({item}) =>
-                              <TouchableOpacity
-                                  onPress={() => this.props.navigation.navigate('MyQuestion', {
-                                      name: item.displayname,
-                                      id: item.id
-                                  })}>
-                                  <View style={{borderTopColor: 'green'}}>
-                                      <Text style={items.name}>{item.displayname}</Text>
-                                      <Text style={items.author}>{item.author}</Text>
-                                      <View style={items.line}/>
-                                  </View>
-                              </TouchableOpacity>
-                          }
-                          keyExtractor={item => item.id}
-                          refreshing={this.state.refresh}
-                          onRefresh={() => {
-                              this.callAPI();
-                          }}
-                          onEndReachedThreshold={-0.5}
-                          onEndReached={() => {
+                <MathJax.Context>
+                    <div>
+                        This is an inline math formula: <MathJax.Node inline>{'a = b'}</MathJax.Node>
+                        And a block one:
 
-                          }}
+                <MathJax.Node>{tex}</MathJax.Node>
+                    </div>
+                </MathJax.Context>
+                <FlatList style={items.contain}
+                    data={this.state.list}
+                    renderItem={({ item }) =>
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('MyQuestion', {
+                                name: item.displayname,
+                                id: item.id
+                            })}>
+                            <View style={{ borderTopColor: 'green' }}>
+                                <Text style={items.name}>{item.displayname}</Text>
+                                <Text style={items.author}>{item.author}</Text>
+                                <View style={items.line} />
+                            </View>
+                        </TouchableOpacity>
+                    }
+                    keyExtractor={item => item.id}
+                    refreshing={this.state.refresh}
+                    onRefresh={() => {
+                        this.callAPI();
+                    }}
+                    onEndReachedThreshold={-0.5}
+                    onEndReached={() => {
+
+                    }}
                 />
             </View>
         );

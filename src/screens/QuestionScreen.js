@@ -3,6 +3,7 @@ import { Image, TouchableOpacity, View, WebView, Text, StyleSheet } from "react-
 import getMath from '../../assets/html';
 import axios from 'axios';
 import Swiper from 'react-native-swiper';
+
 const instance = axios.create({
     baseURL: 'http://mathpt.webstarterz.com/api',
     headers: {
@@ -39,7 +40,7 @@ export default class QuestionScreen extends React.Component {
         mContext = this;
         this.state = {
             title: '',
-            header: `<head><script type=\'text/javascript\' async src=\'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\'></script></head>`,
+            header: `<head><script type=\'text/javascript\' async src=\'../../assets/mathjax/2.7-latest/MathJax.js?config=MML_CHTML\'></script></head>`,
             pages: []
         };
     }
@@ -54,12 +55,14 @@ export default class QuestionScreen extends React.Component {
             <View style={{ flex: 1 }}>
                 <Swiper style={styles.wrapper} showsButtons={true}
                     loop={false}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}>
+                    showsPagination={false}>
                     {this.state.pages.map((item, key) => {
                         return (
-                            <View key={item.id} style={{ flex: 1 }}>
-                                <WebView source={{ html: this.state.header + item.content }} style={{ flex: 1 }} />
+                            <View key={key} style={{ flex: 1 }}>
+                                <WebView 
+                                    source={{ html:item.content }}
+                                    javaScriptEnabled={true}
+                                    style={{ flex: 1 }} />
                             </View>
                         )
                     })}
@@ -86,7 +89,7 @@ export default class QuestionScreen extends React.Component {
                 let mangStemp = [];
                 let header = `<head><script type=\'text/javascript\' async src=\'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\'></script></head>`;
                 for (var i = 0; i < response.data.data.length; i++) {
-                    const contentHtml = getMath("<b>Câu "+(i+1)+":</b> "+response.data.data[i].question, response.data.data[i].image,
+                    const contentHtml = getMath("<b>Câu " + (i + 1) + ":</b> " + response.data.data[i].question, response.data.data[i].image,
                         response.data.data[i].answerA, response.data.data[i].answerB, response.data.data[i].answerC,
                         response.data.data[i].answerD);
                     const obj = {
