@@ -3,11 +3,6 @@ import {
     StyleSheet, Image, View, Button, TouchableOpacity, FlatList, Text
 } from 'react-native';
 import axios from 'axios';
-const MathJax = require('react-mathjax');
-
-const tex = `f(x) = \\int_{-\\infty}^\\infty
-\\hat f(\\xi)\\,e^{2 \\pi i \\xi x}
-\\,d\\xi`;
 
 const MenuButton = (props) => (
     <TouchableOpacity onPress={() => {
@@ -57,14 +52,6 @@ export default class MainScreen extends React.Component {
     render() {
         return (
             <View>
-                <MathJax.Context>
-                    <div>
-                        This is an inline math formula: <MathJax.Node inline>{'a = b'}</MathJax.Node>
-                        And a block one:
-
-                <MathJax.Node>{tex}</MathJax.Node>
-                    </div>
-                </MathJax.Context>
                 <FlatList style={items.contain}
                     data={this.state.list}
                     renderItem={({ item }) =>

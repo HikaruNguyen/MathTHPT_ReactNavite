@@ -61,7 +61,6 @@ export default class QuestionScreen extends React.Component {
                             <View key={key} style={{ flex: 1 }}>
                                 <WebView 
                                     source={{ html:item.content }}
-                                    javaScriptEnabled={true}
                                     style={{ flex: 1 }} />
                             </View>
                         )
