@@ -2,7 +2,7 @@ import React from 'react';
 import {
     StyleSheet, Image, View, Button, TouchableOpacity, FlatList, Text
 } from 'react-native';
-import axios from 'axios';
+import {MyAxios} from '../config/MyAxios';
 
 const MenuButton = (props) => (
     <TouchableOpacity onPress={() => {
@@ -12,17 +12,11 @@ const MenuButton = (props) => (
     </TouchableOpacity>
 );
 
-const instance = axios.create({
-    baseURL: 'http://mathpt.webstarterz.com/api',
-    headers: {
-        'X-Math-Api-Key': 'manh123@abc'
-    }
-});
 let mContext;
 export default class MainScreen extends React.Component {
 
     static navigationOptions = ({ navigation }) => ({
-        title: 'Home',
+        title: 'Bộ đề',
         headerLeft: <MenuButton navigation={navigation} />,
         headerStyle: {
             backgroundColor: '#2196F3'
@@ -30,11 +24,11 @@ export default class MainScreen extends React.Component {
         headerTitleStyle: {
             color: '#fff',
         },
-        drawerLabel: 'Home',
+        drawerLabel: 'Bộ đề',
         headerBackTitle: null,
         drawerIcon: ({ tintColor }) => (
             <Image
-                source={require('../../imgs/ic_category.png')}
+                source={require('../../imgs/ic_tests.png')}
                 style={[styles.icon]}
             />
         ),
@@ -58,7 +52,8 @@ export default class MainScreen extends React.Component {
                         <TouchableOpacity
                             onPress={() => this.props.navigation.navigate('MyQuestion', {
                                 name: item.displayname,
-                                id: item.id
+                                id: item.id,
+                                type: "test"
                             })}>
                             <View style={{ borderTopColor: 'green' }}>
                                 <Text style={items.name}>{item.displayname}</Text>
@@ -90,8 +85,8 @@ export default class MainScreen extends React.Component {
         mContext.setState({
             refresh: true
         });
-        instance.defaults.headers.common['X-Math-Api-Key'] = 'manh123@abc';
-        instance.get('/content/get-test.php')
+        MyAxios.defaults.headers.common['X-Math-Api-Key'] = 'manh123@abc';
+        MyAxios.get('/content/get-test.php')
             .then(function (response) {
                 console.log("responseJson: " + JSON.stringify(response));
                 mContext.setState({
